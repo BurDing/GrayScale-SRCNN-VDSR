@@ -12,9 +12,9 @@ import torch.optim as optim
 from torch.utils.data import DataLoader
 
 epoch = 50
-cuda = False
-batch = 640
-train_size = 16000
+cuda = True
+batch = 64
+train_size = 1600
 test_size = 5
 
 # Read all iamges
