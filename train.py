@@ -11,7 +11,7 @@ import imageio
 import torch.optim as optim
 from torch.utils.data import DataLoader
 
-epoch = 50
+epoch = 100
 cuda = True
 batch = 64
 train_size = 1600
