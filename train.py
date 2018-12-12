@@ -79,7 +79,7 @@ for i in range(0, epoch):
         print("epoch:" + i + "loss:" + loss)
 
 torch.save(net, "train_model.pth")
-model = torch.load("train_model.pth")
+# model = torch.load("train_model.pth")
 
 
 #  test
