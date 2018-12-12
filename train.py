@@ -76,7 +76,7 @@ for i in range(0, epoch):
         optimizer.step()    # Does the update
         print("# of batch:" + step)
     if i%1 == 0:
-        print("epoch:" i + "loss:" + loss)
+        print("epoch:" + i + "loss:" + loss)
 
 torch.save(net, "train_model.pth")
 model = torch.load("train_model.pth")
