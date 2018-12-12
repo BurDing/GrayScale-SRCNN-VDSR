@@ -1,13 +1,24 @@
+print("1")
 from PIL import Image
+print("2")
 import numpy as np
+print("3")
 import matplotlib.pyplot as plt
+print("4")
 import os
+print("5")
 import cv2
+print("6")
 import torch
+print("7")
 import torch.nn as nn
+print("8")
 import torch.nn.functional as F
+print("9")
 import skimage.transform
+print("10")
 import imageio
+print("11")
 
 # Read all iamges
 train_files = os.listdir('train_images_128x128')
