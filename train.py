@@ -58,11 +58,12 @@ class SRCNN(nn.Module):
 net = SRCNN()
 criterion = nn.MSELoss()
 if cuda:
-    srcnn.cuda()
+    net.cuda()
     criterion = criterion.cuda()
 # create optimizer
 optimizer = optim.Adam(net.parameters(), lr=0.01)
 # Train
+print("Begin")
 for i in range(0, epoch):
     for step, (input, target) in enumerate(data_loader):
         if cuda:
