@@ -9,10 +9,12 @@ import torch.nn.functional as F
 import skimage.transform
 import imageio
 
+print("in")
 # Read all iamges
 train_files = os.listdir('train_images_128x128')
 test_files = os.listdir('test_images_64x64')
 
+print("in")
 # Obtain 128x128 cubic image
 for ima in train_files:
     img = imageio.imread('train_images_64x64/'+ima)
