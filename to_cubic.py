@@ -3,7 +3,6 @@ from PIL import Image
 print("2")
 import numpy as np
 print("3")
-import matplotlib.pyplot as plt
 print("4")
 import os
 print("5")
