@@ -18,18 +18,18 @@ train_size = 16000
 test_size = 5
 
 # Read all iamges
-train_files = os.listdir('../cubic_train')
-train_labels_files = os.listdir('../train_images_128x128')
-test_files = os.listdir('../cubic_test')
+train_files = os.listdir('cubic_train')
+train_labels_files = os.listdir('train_images_128x128')
+test_files = os.listdir('cubic_test')
 # Obtain greyscale arrays with given size
 train_imgs = np.zeros((train_size, 128, 128))
 train_imgs_labels = np.zeros((train_size, 128, 128))
 test_imgs = np.zeros((test_size, 128, 128))
 for i in range(0, train_size):
-    train_imgs[i] = np.array(Image.open('../cubic_train/' + train_files[i]).convert('L'))
-    train_imgs_labels[i] = np.array(Image.open('../train_images_128x128/' + train_labels_files[i]).convert('L'))
+    train_imgs[i] = np.array(Image.open('cubic_train/' + train_files[i]).convert('L'))
+    train_imgs_labels[i] = np.array(Image.open('train_images_128x128/' + train_labels_files[i]).convert('L'))
 for i in range(0, test_size):
-    test_imgs[i] = np.array(Image.open('../cubic_test/' + test_files[i]).convert('L'))
+    test_imgs[i] = np.array(Image.open('cubic_test/' + test_files[i]).convert('L'))
 # data to tensor
 train_data = torch.FloatTensor(train_imgs).view(train_size, 1, 128, 128)
 target_data = torch.FloatTensor(train_imgs_labels).view(train_size, 1, 128, 128)
