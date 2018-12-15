@@ -17,6 +17,7 @@ batch = 64
 train_size = 16000
 test_size = 3999
 
+print("read")
 # Read all iamges
 train_files = os.listdir('cubic_train')
 train_labels_files = os.listdir('train_images_128x128')
