@@ -13,7 +13,7 @@ from torch.utils.data import DataLoader
 
 epoch = 200
 cuda = True
-batch = 640
+batch = 64
 train_size = 16000
 test_size = 3999
 
