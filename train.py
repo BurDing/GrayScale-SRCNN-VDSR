@@ -84,7 +84,7 @@ for i in range(0, epoch):
         print("epoch: " + str(i) + " loss: " + str(loss_sum) + " loss_input: " + str(loss_input_sum))
     if i % 100 == 0:
         file_name = str(i) + "_" + "train_model.pth"
-        print("Save loss: " + str(loss_sum) + "name: " + file_name)
+        print("Save loss: " + str(loss_sum) + " Name: " + file_name)
         torch.save(net, "model/" + file_name)
 
 torch.save(net, "final_train_model.pth")
