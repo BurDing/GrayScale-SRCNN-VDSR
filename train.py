@@ -11,11 +11,11 @@ import imageio
 import torch.optim as optim
 from torch.utils.data import DataLoader
 
-epoch = 100
+epoch = 200
 cuda = True
-batch = 64
-train_size = 1600
-test_size = 5
+batch = 640
+train_size = 16000
+test_size = 3999
 
 # Read all iamges
 train_files = os.listdir('cubic_train')
