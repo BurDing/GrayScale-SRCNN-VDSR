@@ -31,10 +31,9 @@ for i in range(0, train_size):
 for i in range(0, test_size):
     test_imgs[i] = np.array(Image.open('cubic_test/' + test_files[i]).convert('L'))
 # data to tensor
-train_data = torch.FloatTensor(train_imgs).view(train_size, 1, 128, 128)
-target_data = torch.FloatTensor(train_imgs_labels).view(train_size, 1, 128, 128)
-test_data = torch.FloatTensor(test_imgs).view(test_size, 1, 128, 128)
-data_loader = DataLoader(dataset=(train_data,target_data), batch_size=batch, shuffle=True)
+train_data = [(torch.FloatTensor(train_imgs[i]).view(1, 128, 128),  torch.FloatTensor(train_imgs_labels[i]).view(1, 1, 128, 128)) for i in range(0, train_size)]
+test_data = [torch.FloatTensor(i).view(1, 128, 128) for i in test_imgs]
+data_loader = DataLoader(dataset=train_data, batch_size=batch, shuffle=True)
 
 class SRCNN(nn.Module):
     def __init__(self):
@@ -61,10 +60,12 @@ if cuda:
     net.cuda()
     criterion = criterion.cuda()
 # create optimizer
-optimizer = optim.Adam(net.parameters(), lr=0.01)
+optimizer = optim.Adam(net.parameters(), lr=0.001)
 # Train
 print("Begin")
 for i in range(0, epoch):
+    loss_sum= 0
+    loss_input_sum = 0
     for step, (input, target) in enumerate(data_loader):
         if cuda:
             input = input.cuda()
@@ -73,11 +74,12 @@ for i in range(0, epoch):
         optimizer.zero_grad()   # zero the gradient buffers
         output = net(input)
         loss = criterion(output, target)
+        loss_sum += loss.item()
+        loss_input = criterion(input, target)
+        loss_input_sum += loss_input.item()
         loss.backward()
         optimizer.step()    # Does the update
-        print("# of batch:" + step)
-    if i%1 == 0:
-        print("epoch:" + i + "loss:" + loss)
+        print("epoch: " + str(i) + " step: " + str(step) + " loss: " + str(loss_sum) + " loss_input: " + str(loss_input_sum))
 
 torch.save(net, "train_model.pth")
 # model = torch.load("train_model.pth")
