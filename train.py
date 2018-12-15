@@ -11,9 +11,9 @@ import imageio
 import torch.optim as optim
 from torch.utils.data import DataLoader
 
-epoch = 100
+epoch = 15000
 cuda = True
-batch = 1
+batch = 128
 train_size = 16000
 test_size = 3999
 
@@ -61,7 +61,7 @@ if cuda:
     net.cuda()
     criterion = criterion.cuda()
 # create optimizer
-optimizer = optim.Adam(net.parameters(), lr=0.005)
+optimizer = optim.Adam(net.parameters(), lr=1e-4)
 # Train
 print("Begin")
 for i in range(0, epoch):
@@ -80,7 +80,7 @@ for i in range(0, epoch):
         loss_input_sum += loss_input.item()
         loss.backward()
         optimizer.step()    # Does the update
-        if (step + 1) % 4000 == 0:
+        if (step + 1) % 25 == 0:
             print("epoch: " + str(i) + " step: " + str(step) + " loss: " + str(loss_sum) + " loss_input: " + str(loss_input_sum))
 
 torch.save(net, "train_model.pth")
