@@ -61,7 +61,7 @@ if cuda:
     net.cuda()
     criterion = criterion.cuda()
 # create optimizer
-optimizer = optim.Adam(net.parameters(), lr=0.001)
+optimizer = optim.Adam(net.parameters(), lr=0.005)
 # Train
 print("Begin")
 for i in range(0, epoch):
@@ -80,7 +80,8 @@ for i in range(0, epoch):
         loss_input_sum += loss_input.item()
         loss.backward()
         optimizer.step()    # Does the update
-        print("epoch: " + str(i) + " step: " + str(step) + " loss: " + str(loss_sum) + " loss_input: " + str(loss_input_sum))
+        if (step + 1) % 50 == 0:
+            print("epoch: " + str(i) + " step: " + str(step) + " loss: " + str(loss_sum) + " loss_input: " + str(loss_input_sum))
 
 torch.save(net, "train_model.pth")
 # model = torch.load("train_model.pth")
