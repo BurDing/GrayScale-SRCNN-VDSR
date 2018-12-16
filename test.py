@@ -2,7 +2,7 @@ test_size = 3999
 batch = 128
 cuda = True
 
-print(read)
+print("read")
 test_files = os.listdir('cubic_test')
 test_imgs = np.zeros((test_size, 128, 128))
 for i in range(0, test_size):
@@ -21,4 +21,3 @@ for step, input in enumerate(test_loader):
     for j in range(0, batch):
         imageio.imwrite('upload/' + test_files[i * batch + j], out[j], format=None)
     i += 1
-    
