@@ -10,6 +10,7 @@ import skimage.transform
 import imageio
 import torch.optim as optim
 from torch.utils.data import DataLoader
+from math import sqrt
 
 epoch = 500
 cuda = True
