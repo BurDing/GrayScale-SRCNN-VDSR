@@ -20,6 +20,7 @@ test_files = os.listdir('cubic_test')
 test_imgs = np.zeros((test_size, 128, 128))
 for i in range(0, test_size):
     test_imgs[i] = np.array(Image.open('cubic_test/' + test_files[i]).convert('L'))
+test_data = [torch.FloatTensor(i).view(1, 128, 128) for i in test_imgs]
 test_loader = DataLoader(dataset=test_data, batch_size=batch, shuffle=True)
 
 model = torch.load("model/500_train_model.pth")
