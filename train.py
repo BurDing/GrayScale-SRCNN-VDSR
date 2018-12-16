@@ -28,7 +28,7 @@ for i in range(0, train_size):
     train_imgs_labels[i] = np.array(Image.open('train_images_128x128/' + train_labels_files[i]).convert('L'))
 # data to tensor
 train_data = [(torch.FloatTensor(train_imgs[i]).view(1, 128, 128),  torch.FloatTensor(train_imgs_labels[i]).view(1, 1, 128, 128)) for i in range(0, train_size)]
-data_loader = DataLoader(dataset=train_data, batch_size=batch,  num_workers=2, shuffle=True)
+data_loader = DataLoader(dataset=train_data, batch_size=batch,  num_workers=4, shuffle=True)
 
 class SRCNN(nn.Module):
     def __init__(self):
