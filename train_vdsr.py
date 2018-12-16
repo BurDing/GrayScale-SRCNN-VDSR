@@ -12,7 +12,7 @@ import torch.optim as optim
 from torch.utils.data import DataLoader
 from math import sqrt
 
-epoch = 500
+epoch = 100
 cuda = True
 batch = 1
 train_size = 16000
