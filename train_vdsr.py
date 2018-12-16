@@ -93,6 +93,8 @@ for i in range(0, epoch):
         loss_input_sum += loss_input.item()
         loss.backward()
         optimizer.step()    # Does the update
+        if step % 10 == 0:
+            print(step)
     print("epoch: " + str(i) + " loss: " + str(loss_sum / len(data_loader)) + " loss_input: " + str(loss_input_sum / len(data_loader)))
     if i % 10 == 0:
         file_name = str(i) + "_" + "train_model.pth"
