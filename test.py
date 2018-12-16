@@ -21,3 +21,4 @@ for step, input in enumerate(test_loader):
     for j in range(0, batch):
         imageio.imwrite('upload/' + test_files[i * batch + j], out[j], format=None)
     i += 1
+    
