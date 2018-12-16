@@ -39,7 +39,7 @@ class Conv_ReLU_Block(nn.Module):
     def forward(self, x):
         return self.relu(self.conv(x))
 
-class Net(nn.Module):
+class VDSR(nn.Module):
     def __init__(self):
         super(Net, self).__init__()
         self.residual_layer = self.make_layer(Conv_ReLU_Block, 18)
@@ -67,7 +67,7 @@ class Net(nn.Module):
         return out
 
 # Build model
-net = SRCNN()
+net = VDSR()
 criterion = nn.MSELoss()
 if cuda:
     net.cuda()
@@ -92,10 +92,10 @@ for i in range(0, epoch):
         loss_input_sum += loss_input.item()
         loss.backward()
         optimizer.step()    # Does the update
-        print("epoch: " + str(i) + " loss: " + str(loss_sum) + " loss_input: " + str(loss_input_sum))
+    print("epoch: " + str(i) + " loss: " + str(loss_sum / len(data_loader)) + " loss_input: " + str(loss_input_sum / len(data_loader)))
     if i % 10 == 0:
         file_name = str(i) + "_" + "train_model.pth"
-        print("Save loss: " + str(loss_sum) + " Name: " + file_name)
+        print("Save loss: " + str(loss_sum / len(data_loader)) + " Name: " + file_name)
         torch.save(net, "model/" + file_name)
 
 torch.save(net, "final_train_model.pth")
