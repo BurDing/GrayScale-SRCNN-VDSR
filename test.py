@@ -41,14 +41,59 @@ class SRCNN(nn.Module):
 
         return out
 
+class Conv_ReLU_Block(nn.Module):
+    def __init__(self):
+        super(Conv_ReLU_Block, self).__init__()
+        self.conv = nn.Conv2d(in_channels=64, out_channels=64, kernel_size=3, stride=1, padding=1, bias=False)
+        self.relu = nn.ReLU(inplace=True)
+
+    def forward(self, x):
+        return self.relu(self.conv(x))
+
+class Net(nn.Module):
+    def __init__(self):
+        super(Net, self).__init__()
+        self.residual_layer = self.make_layer(Conv_ReLU_Block, 18)
+        self.input = nn.Conv2d(in_channels=1, out_channels=64, kernel_size=3, stride=1, padding=1, bias=False)
+        self.output = nn.Conv2d(in_channels=64, out_channels=1, kernel_size=3, stride=1, padding=1, bias=False)
+        self.relu = nn.ReLU(inplace=True)
+
+        for m in self.modules():
+            if isinstance(m, nn.Conv2d):
+                n = m.kernel_size[0] * m.kernel_size[1] * m.out_channels
+                m.weight.data.normal_(0, sqrt(2. / n))
+
+    def make_layer(self, block, num_of_layer):
+        layers = []
+        for _ in range(num_of_layer):
+            layers.append(block())
+        return nn.Sequential(*layers)
+
+    def forward(self, x):
+        residual = x
+        out = self.relu(self.input(x))
+        out = self.residual_layer(out)
+        out = self.output(out)
+        out = torch.add(out,residual)
+        return out
+
 model = torch.load("model/500_train_model.pth")
 
 # test
-for step, input in enumerate(test_loader):
-    print(step)
+for t in range(0, test_size):
+    if t % 100 == 0:
+        print("Save: " + t)
     if cuda:
         model = model.cuda()
-        input = input.cuda()
-    out = model(input).view(batch,128,128).detach().numpy()
-    for j in range(0, batch):
-        imageio.imwrite('upload/' + test_files[step * batch + j], out[j], format=None)
+        I = I.cuda()
+    I = np.rint(model(test_data[t].view(1, 1, 128, 128)).view(128,128).detach().numpy())
+    # remove the negative and higher than 255
+    for i in range(0, 128):
+        for j in range (0, 128):
+            if I[i][j] < 0:
+                I[i][j] = 0
+            if I[i][j] > 255:
+                I[i][j] = 255
+    I = I.astype(np.uint8)
+    img = Image.fromarray(I)
+    img.save('upload/' + test_files[t])

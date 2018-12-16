@@ -30,22 +30,40 @@ for i in range(0, train_size):
 train_data = [(torch.FloatTensor(train_imgs[i]).view(1, 128, 128),  torch.FloatTensor(train_imgs_labels[i]).view(1, 1, 128, 128)) for i in range(0, train_size)]
 data_loader = DataLoader(dataset=train_data, batch_size=batch, shuffle=True)
 
-class SRCNN(nn.Module):
+class Conv_ReLU_Block(nn.Module):
     def __init__(self):
-        super(SRCNN,self).__init__()
-        self.conv1 = nn.Conv2d(1,64,kernel_size=9,padding=4);
-        self.relu1 = nn.ReLU();
-        self.conv2 = nn.Conv2d(64,32,kernel_size=1,padding=0);
-        self.relu2 = nn.ReLU();
-        self.conv3 = nn.Conv2d(32,1,kernel_size=5,padding=2);
+        super(Conv_ReLU_Block, self).__init__()
+        self.conv = nn.Conv2d(in_channels=64, out_channels=64, kernel_size=3, stride=1, padding=1, bias=False)
+        self.relu = nn.ReLU(inplace=True)
 
-    def forward(self,x):
-        out = self.conv1(x)
-        out = self.relu1(out)
-        out = self.conv2(out)
-        out = self.relu2(out)
-        out = self.conv3(out)
+    def forward(self, x):
+        return self.relu(self.conv(x))
 
+class Net(nn.Module):
+    def __init__(self):
+        super(Net, self).__init__()
+        self.residual_layer = self.make_layer(Conv_ReLU_Block, 18)
+        self.input = nn.Conv2d(in_channels=1, out_channels=64, kernel_size=3, stride=1, padding=1, bias=False)
+        self.output = nn.Conv2d(in_channels=64, out_channels=1, kernel_size=3, stride=1, padding=1, bias=False)
+        self.relu = nn.ReLU(inplace=True)
+
+        for m in self.modules():
+            if isinstance(m, nn.Conv2d):
+                n = m.kernel_size[0] * m.kernel_size[1] * m.out_channels
+                m.weight.data.normal_(0, sqrt(2. / n))
+
+    def make_layer(self, block, num_of_layer):
+        layers = []
+        for _ in range(num_of_layer):
+            layers.append(block())
+        return nn.Sequential(*layers)
+
+    def forward(self, x):
+        residual = x
+        out = self.relu(self.input(x))
+        out = self.residual_layer(out)
+        out = self.output(out)
+        out = torch.add(out,residual)
         return out
 
 # Build model
@@ -74,9 +92,8 @@ for i in range(0, epoch):
         loss_input_sum += loss_input.item()
         loss.backward()
         optimizer.step()    # Does the update
-    if i % 10 == 0:
         print("epoch: " + str(i) + " loss: " + str(loss_sum) + " loss_input: " + str(loss_input_sum))
-    if i % 100 == 0:
+    if i % 10 == 0:
         file_name = str(i) + "_" + "train_model.pth"
         print("Save loss: " + str(loss_sum) + " Name: " + file_name)
         torch.save(net, "model/" + file_name)
