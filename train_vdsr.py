@@ -12,7 +12,7 @@ import torch.optim as optim
 from torch.utils.data import DataLoader
 from math import sqrt
 
-epoch = 100
+epoch = 200
 cuda = True
 batch = 1
 train_size = 16000
@@ -68,7 +68,8 @@ class VDSR(nn.Module):
         return out
 
 # Build model
-net = VDSR()
+#net = VDSR()
+net = torch.load("model/99_train_model.pth", map_location='cpu')
 criterion = nn.MSELoss()
 if cuda:
     net.cuda()
@@ -95,7 +96,7 @@ for i in range(0, epoch):
         optimizer.step()    # Does the update
         if step % 1000 == 0:
             print("step: " + str(step) + " epoch: " + str(i) + " loss: " + str(loss_sum / (step+1)) + " loss_input: " + str(loss_input_sum / (step+1)))
-    file_name = str(i) + "_" + "train_model.pth"
+    file_name = str(i + 100) + "_" + "train_model.pth"
     print("Save loss: " + str(loss_sum / len(data_loader)) + " Name: " + file_name)
     torch.save(net, "model/" + file_name)
 
