@@ -1,6 +1,7 @@
 from PIL import Image
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib
 import os
 import cv2
 import torch
@@ -10,19 +11,22 @@ import skimage.transform
 import imageio
 import torch.optim as optim
 from torch.utils.data import DataLoader
+from torchvision.datasets import ImageFolder
+from torchvision import transforms
+from math import sqrt
 
 test_size = 3999
-batch = 128
 cuda = True
 
+# read the test file to tensor
 print("read")
 test_files = os.listdir('cubic_test')
 test_imgs = np.zeros((test_size, 128, 128))
 for i in range(0, test_size):
     test_imgs[i] = np.array(Image.open('cubic_test/' + test_files[i]).convert('L'))
 test_data = [torch.FloatTensor(i).view(1, 128, 128) for i in test_imgs]
-test_loader = DataLoader(dataset=test_data, batch_size=batch, shuffle=True)
 
+# model
 class SRCNN(nn.Module):
     def __init__(self):
         super(SRCNN,self).__init__()
@@ -50,9 +54,9 @@ class Conv_ReLU_Block(nn.Module):
     def forward(self, x):
         return self.relu(self.conv(x))
 
-class Net(nn.Module):
+class VDSR(nn.Module):
     def __init__(self):
-        super(Net, self).__init__()
+        super(VDSR, self).__init__()
         self.residual_layer = self.make_layer(Conv_ReLU_Block, 18)
         self.input = nn.Conv2d(in_channels=1, out_channels=64, kernel_size=3, stride=1, padding=1, bias=False)
         self.output = nn.Conv2d(in_channels=64, out_channels=1, kernel_size=3, stride=1, padding=1, bias=False)
@@ -77,17 +81,15 @@ class Net(nn.Module):
         out = torch.add(out,residual)
         return out
 
-model = torch.load("model/500_train_model.pth")
-
-# test
+# load the model
+model = torch.load("final_train_model.pth")
+# output the result of test
 for t in range(0, test_size):
-    if t % 100 == 0:
-        print("Save: " + t)
     if cuda:
         model = model.cuda()
         I = I.cuda()
     I = np.rint(model(test_data[t].view(1, 1, 128, 128)).view(128,128).detach().numpy())
-    # remove the negative and higher than 255
+    # deal with the negative and larger than 255 pixel
     for i in range(0, 128):
         for j in range (0, 128):
             if I[i][j] < 0:

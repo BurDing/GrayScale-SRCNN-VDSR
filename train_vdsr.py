@@ -12,7 +12,7 @@ import torch.optim as optim
 from torch.utils.data import DataLoader
 from math import sqrt
 
-epoch = 200
+epoch = 500
 cuda = True
 batch = 1
 train_size = 16000
@@ -31,6 +31,7 @@ for i in range(0, train_size):
 train_data = [(torch.FloatTensor(train_imgs[i]).view(1, 128, 128),  torch.FloatTensor(train_imgs_labels[i]).view(1, 1, 128, 128)) for i in range(0, train_size)]
 data_loader = DataLoader(dataset=train_data, batch_size=batch, shuffle=True)
 
+# model
 class Conv_ReLU_Block(nn.Module):
     def __init__(self):
         super(Conv_ReLU_Block, self).__init__()
@@ -68,8 +69,7 @@ class VDSR(nn.Module):
         return out
 
 # Build model
-#net = VDSR()
-net = torch.load("model/99_train_model.pth", map_location='cpu')
+net = VDSR()
 criterion = nn.MSELoss()
 if cuda:
     net.cuda()
@@ -96,7 +96,7 @@ for i in range(0, epoch):
         optimizer.step()    # Does the update
         if step % 1000 == 0:
             print("step: " + str(step) + " epoch: " + str(i) + " loss: " + str(loss_sum / (step+1)) + " loss_input: " + str(loss_input_sum / (step+1)))
-    file_name = str(i + 100) + "_" + "train_model.pth"
+    file_name = str(i) + "_" + "train_model.pth"
     print("Save loss: " + str(loss_sum / len(data_loader)) + " Name: " + file_name)
     torch.save(net, "model/" + file_name)
 

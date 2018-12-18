@@ -30,6 +30,7 @@ for i in range(0, train_size):
 train_data = [(torch.FloatTensor(train_imgs[i]).view(1, 128, 128),  torch.FloatTensor(train_imgs_labels[i]).view(1, 1, 128, 128)) for i in range(0, train_size)]
 data_loader = DataLoader(dataset=train_data, batch_size=batch, shuffle=True)
 
+# model
 class SRCNN(nn.Module):
     def __init__(self):
         super(SRCNN,self).__init__()
