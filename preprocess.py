@@ -10,7 +10,7 @@ import skimage.transform
 import imageio
 
 # Read all iamges
-train_files = os.listdir('train_images_128x128')
+train_files = os.listdir('train_images_64x64')
 test_files = os.listdir('test_images_64x64')
 
 # Obtain 128x128 cubic image
