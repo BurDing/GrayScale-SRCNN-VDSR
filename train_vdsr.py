@@ -69,7 +69,7 @@ class VDSR(nn.Module):
         return out
 
 # Build model
-net = VDSR()
+net = torch.load("model/583_train_model.pth")
 criterion = nn.MSELoss()
 if cuda:
     net.cuda()
@@ -95,8 +95,8 @@ for i in range(0, epoch):
         loss.backward()
         optimizer.step()    # Does the update
         if step % 1000 == 0:
-            print("step: " + str(step) + " epoch: " + str(i) + " loss: " + str(loss_sum / (step+1)) + " loss_input: " + str(loss_input_sum / (step+1)))
-    file_name = str(i) + "_" + "train_model.pth"
+            print("step: " + str(step) + " epoch: " + str(i+584) + " loss: " + str(loss_sum / (step+1)) + " loss_input: " + str(loss_input_sum / (step+1)))
+    file_name = str(i+584) + "_" + "train_model.pth"
     print("Save loss: " + str(loss_sum / len(data_loader)) + " Name: " + file_name)
     torch.save(net, "model/" + file_name)
 
