@@ -85,7 +85,6 @@ class VDSR(nn.Module):
 model = torch.load("model/1083_train_model.pth", map_location='cpu')
 # output the result of test
 for t in range(0, test_size):
-    print(t)
     I = np.rint(model(test_data[t].view(1, 1, 128, 128)).view(128,128).detach().numpy())
     # deal with the negative and larger than 255 pixel
     for i in range(0, 128):
